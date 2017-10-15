@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="IE=10" />
+	    <title>PoC m4d LogViewer client</title>
+		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+	</head>
+
+	<body>
+		<script>
+			function keepAlive(socket) {
+				console.log('keepingAlive client '+new Date().getTime());
+		        socket.emit('m4d-logViewer-clientAlive-event', 'whatever');
+				setTimeout(function() {
+					keepAlive(socket);
+				}, 2000);
+			}
+			var socket = io('http://192.168.1.133:3001', { path: '/logViewer'});
+			socket.on('m4d-logViewer-serverData-event', function(data) {
+				 console.log(data);
+/* 				 console.log(data + ', echoing');
+		         socket.emit('ackLogViewer client', 'Echo (' + data + ')'); */
+		    });
+			setTimeout(function() {
+				keepAlive(socket);
+			}, 2000);
+		</script>
+	</body>
+</html>
